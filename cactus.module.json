@@ -1,0 +1,20 @@
+{
+  "name": "product-downloads-for-shop",
+  "version": "0.1.0",
+  "tablePrefix": "pdl_",
+  "description": "Downloadable files for shop products: attach manuals, spec sheets, care instructions or drawings to a product, name each one in plain English, and they appear as a Downloads tab on the product page.",
+  "requiresCoreVersion": "0.5.472",
+  "requiresModules": [
+    { "name": "shop", "minVersion": "0.1.47" }
+  ],
+  "permissions": [],
+  "requiredEnvVars": [],
+  "cookieCategories": [],
+  "extensionPoints": [
+    { "point": "shop.product-editor-sections", "id": "product-downloads-inline", "label": "Downloads", "order": 50, "permission": "shop.products", "import": "./components/admin/ProductDownloadsSection", "component": "ProductDownloadsSection" },
+    { "point": "shop.product-detail-tabs", "id": "product-downloads", "import": "./lib/detail-tab-provider", "component": "productDownloadsTabProvider" }
+  ],
+  "teardown": [
+    "pdl_files"
+  ]
+}
