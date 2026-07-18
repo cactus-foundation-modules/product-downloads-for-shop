@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db/prisma'
 import { deleteMedia } from '@/lib/media/upload'
 import { requireShopUser } from '@/modules/shop/lib/access'
 import { deleteFile, getStoredFileById, renameFile } from '@/modules/product-downloads-for-shop/lib/db/files'
+import { withFreshStorage } from '@/modules/product-downloads-for-shop/lib/db/heal'
 import type { MediaProviderType } from '@prisma/client'
 
 // Renaming and removing one download.
@@ -35,8 +36,13 @@ export async function DELETE(_request: NextRequest, { params }: { params: Promis
   if (gate.error) return gate.error
 
   const { id } = await params
-  const file = await getStoredFileById(id)
-  if (!file) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  const stored = await getStoredFileById(id)
+  if (!stored) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+
+  // Deleting by a key the library stopped using leaves the real bytes behind,
+  // billed forever with nothing left pointing at them, so the address is brought
+  // up to date first. Same repair the download path does - see lib/db/heal.ts.
+  const file = await withFreshStorage(stored)
 
   // Our row first: it is the one the tab reads, so dropping it is what actually
   // removes the download from the shop. Everything after is tidying, and a

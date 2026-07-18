@@ -1,6 +1,6 @@
 {
   "name": "cactus-module-product-downloads-for-shop",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Downloadable files (manuals, spec sheets, drawings) for Cactus shop products",
   "license": "MIT",
   "private": true

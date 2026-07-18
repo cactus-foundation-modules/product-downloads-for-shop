@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { downloadMedia } from '@/lib/media/upload'
 import { getProductById } from '@/modules/shop/lib/db/products'
 import { getStoredFileById } from '@/modules/product-downloads-for-shop/lib/db/files'
+import { withFreshStorage } from '@/modules/product-downloads-for-shop/lib/db/heal'
 import { contentDisposition } from '@/modules/product-downloads-for-shop/lib/download-name'
 import type { MediaProviderType } from '@prisma/client'
 
@@ -27,8 +28,14 @@ import type { MediaProviderType } from '@prisma/client'
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
-  const file = await getStoredFileById(id)
-  if (!file) return new NextResponse('Not found', { status: 404 })
+  const stored = await getStoredFileById(id)
+  if (!stored) return new NextResponse('Not found', { status: 404 })
+
+  // The stored key is a snapshot and the library moves things about, so it is
+  // checked against the Media row (and repaired) before anything reads bytes.
+  // See lib/db/heal.ts - this is what stops a product rename taking every one of
+  // its downloads offline until someone re-uploads them.
+  const file = await withFreshStorage(stored)
 
   // Mirrors app/public/shop/products/[slug]/page.tsx: a DRAFT product was never
   // published and an ARCHIVED one was withdrawn on purpose, so neither should be

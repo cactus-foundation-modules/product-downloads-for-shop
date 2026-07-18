@@ -1,6 +1,6 @@
 {
   "name": "product-downloads-for-shop",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "tablePrefix": "pdl_",
   "description": "Downloadable files for shop products: attach manuals, spec sheets, care instructions or drawings to a product, name each one in plain English, and they appear as a Downloads tab on the product page.",
   "requiresCoreVersion": "0.5.472",
