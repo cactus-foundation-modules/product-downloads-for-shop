@@ -30,7 +30,7 @@ const css = `
 
 function DownloadItem({ file }: { file: PdlPublicFile }) {
   return (
-    <a className="pdl-item" href={file.href}>
+    <a className="pdl-item" href={file.href} target="_blank" rel="noopener noreferrer">
       <span className="pdl-kind">{file.kind}</span>
       <span className="pdl-text">
         <b>{file.name}</b>
