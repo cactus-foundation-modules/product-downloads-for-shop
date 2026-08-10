@@ -31,7 +31,7 @@ const css = `
 .pdl-ed-name{flex:1;min-width:8rem;padding:.375rem .625rem;border:1px solid var(--color-border);border-radius:6px;
   background:var(--color-bg);color:var(--color-text);font-size:.875rem;font-family:inherit}
 .pdl-ed-name:focus{outline:2px solid var(--color-primary);outline-offset:-1px}
-.pdl-ed-meta{font-size:.75rem;color:var(--color-text-muted);white-space:nowrap;overflow:hidden;
+.pdl-ed-meta{font-size:.75rem;color:var(--color-text-secondary);white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis;max-width:16rem}
 .pdl-ed-moves{display:flex;gap:.25rem;flex-shrink:0}
 .pdl-ed-move{width:1.75rem;height:1.75rem;display:flex;align-items:center;justify-content:center;padding:0;
@@ -40,9 +40,9 @@ const css = `
 .pdl-ed-move:disabled{opacity:.4;cursor:default}
 .pdl-ed-move:not(:disabled):hover{border-color:var(--color-primary);color:var(--color-primary)}
 .pdl-ed-empty{padding:1rem;border:1px dashed var(--color-border);border-radius:8px;
-  color:var(--color-text-muted);font-size:.875rem}
+  color:var(--color-text-secondary);font-size:.875rem}
 .pdl-ed-err{color:var(--color-danger);font-size:.8125rem;margin:0}
-.pdl-ed-help{color:var(--color-text-muted);font-size:.8125rem;margin:0;line-height:1.5}
+.pdl-ed-help{color:var(--color-text-secondary);font-size:.8125rem;margin:0;line-height:1.5}
 `
 
 export function ProductDownloadsEditor({ productId }: { productId: string }) {
