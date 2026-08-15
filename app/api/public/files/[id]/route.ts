@@ -6,6 +6,13 @@ import { withFreshStorage } from '@/modules/product-downloads-for-shop/lib/db/he
 import { contentDisposition } from '@/modules/product-downloads-for-shop/lib/download-name'
 import type { MediaProviderType } from '@prisma/client'
 
+// The most this route will hand over in one response. Every byte is held in
+// memory at once, so this is a heap ceiling rather than a policy: 64MB is far
+// above any manual or spec sheet and far below the point at which a serverless
+// function falls over. A file past it is refused with a plain 413 and a loud log
+// rather than being allowed to take the whole function down silently.
+const MAX_DOWNLOAD_BYTES = 64 * 1024 * 1024
+
 // Hand a shopper one of a product's downloads.
 //
 // Public and ungated, which is the feature: these are the manuals, spec sheets
@@ -58,6 +65,25 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
   } catch (error) {
     console.error(`[product-downloads-for-shop] could not read ${file.mediaKey ?? file.url}:`, error)
     return new NextResponse('That file could not be retrieved.', { status: 502 })
+  }
+
+  // The whole file is in memory by this point, which is the price of renaming it
+  // on the way past (see below). That is fine for the manuals and spec sheets
+  // this feature is for and emphatically not fine for everything: a large CAD
+  // drawing or a video would take the function's whole heap with it, and the
+  // symptom at the other end is a dead download with no explanation.
+  //
+  // Refused rather than streamed. Streaming would mean giving up the filename,
+  // which is the entire reason the bytes come through here instead of the
+  // shopper being linked straight at storage - so the honest answer is to say
+  // the file is too big to serve this way, loudly, where somebody will see it.
+  if (bytes.length > MAX_DOWNLOAD_BYTES) {
+    console.error(
+      `[product-downloads-for-shop] "${file.name}" is ${bytes.length} bytes, over the ${MAX_DOWNLOAD_BYTES} limit - not served`,
+    )
+    return new NextResponse('That file is too large to download from here. Please get in touch and we will send it over.', {
+      status: 413,
+    })
   }
 
   return new NextResponse(new Uint8Array(bytes), {
