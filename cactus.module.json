@@ -1,6 +1,6 @@
 {
   "name": "product-downloads-for-shop",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "tablePrefix": "pdl_",
   "description": "Downloadable files for shop products: attach manuals, spec sheets, care instructions or drawings to a product, name each one in plain English, and they appear as a Downloads tab on the product page.",
   "requiresCoreVersion": "0.5.472",
@@ -34,6 +34,12 @@
       "id": "product-downloads-for-shop",
       "import": "./lib/media-usage-provider",
       "component": "productDownloadsMediaUsageProvider"
+    },
+    {
+      "point": "core.media-reference-rewriters",
+      "id": "product-downloads-for-shop",
+      "import": "./lib/media-reference-rewriter",
+      "component": "productDownloadsMediaReferenceRewriter"
     }
   ],
   "teardown": [
