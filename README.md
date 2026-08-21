@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="module-art.webp" alt="Product Downloads for Shop" width="640" />
+</p>
+
 # Product Downloads for Shop
 
 Downloadable files for the [Cactus](https://github.com/usersaynoso/cactus-foundation) shop. Attach the assembly instructions, a spec sheet, a care card or a drawing to a product, give each one a name in plain English, and they appear on the product page under a **Downloads** tab that anyone can take them from.
