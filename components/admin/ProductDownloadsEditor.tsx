@@ -131,6 +131,8 @@ export function ProductDownloadsEditor({ productId }: { productId: string }) {
   }
 
   async function remove(id: string) {
+    // The file and its stored copy are deleted outright, not hidden - no undo.
+    if (!window.confirm('Delete this file? Customers lose access straight away, and there is no undo.')) return
     setError(null)
     const res = await fetch(`/api/m/product-downloads-for-shop/admin/files/${id}`, { method: 'DELETE' })
     if (!res.ok) {
