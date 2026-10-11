@@ -10,6 +10,7 @@
 // consistency: everything on this tab is already written by the time it is drawn.
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useAdminConfirm } from '@/components/admin/useAdminConfirm'
 import { useProductEditorTabBadge } from '@/modules/shop/components/admin/product-editor/context'
 import {
   PDL_ACCEPT,
@@ -46,6 +47,7 @@ const css = `
 `
 
 export function ProductDownloadsEditor({ productId }: { productId: string }) {
+  const [askConfirm, confirmNode] = useAdminConfirm()
   const [files, setFiles] = useState<PdlFile[]>([])
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState(false)
@@ -132,7 +134,7 @@ export function ProductDownloadsEditor({ productId }: { productId: string }) {
 
   async function remove(id: string) {
     // The file and its stored copy are deleted outright, not hidden - no undo.
-    if (!window.confirm('Delete this file? Customers lose access straight away, and there is no undo.')) return
+    if (!(await askConfirm({ title: 'Delete this file?', message: 'Customers lose access straight away, and there is no undo.' }))) return
     setError(null)
     const res = await fetch(`/api/m/product-downloads-for-shop/admin/files/${id}`, { method: 'DELETE' })
     if (!res.ok) {
@@ -169,6 +171,7 @@ export function ProductDownloadsEditor({ productId }: { productId: string }) {
 
   return (
     <div className="spe-panel">
+      {confirmNode}
       <style dangerouslySetInnerHTML={{ __html: css }} />
       <div className="pdl-ed">
         <p className="pdl-ed-help">
